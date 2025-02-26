@@ -1,0 +1,38 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- bash: |
+    # Download and install Syft
+    curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+    # Verify installation
+    syft version
+  displayName: 'Install Syft'
+
+- bash: |
+    # Create directory for SBOM results
+    mkdir -p $(Build.SourcesDirectory)/sbom_results
+    
+    
+    # Generate SBOM for example.apk
+    syft example.apk -o json | jq '.' > $(Build.SourcesDirectory)/sbom_results/example_sbom.json 
+      
+
+    # Verify SBOM files were createdd
+    echo "Generated SBOM files:"
+    ls -la $(Build.SourcesDirectory)/sbom_results/
+  displayName: 'Generate SBOMs for example.apk'
+
+
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.SourcesDirectory)/sbom_results'
+    artifact: 'sbom_artifacts'
+    publishLocation: 'pipeline'
+  displayName: 'Publish SBOM Results'
+
+
