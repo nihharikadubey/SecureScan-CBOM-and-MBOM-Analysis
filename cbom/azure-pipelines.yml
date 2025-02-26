@@ -1,0 +1,38 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - script: |
+      # Pull the cbomkit Docker image from Docker Hub
+      docker pull nihharika/cbomkit_theia:latest
+    displayName: "Pull cbomkit Docker image"
+
+  - script: |
+      # Build the Python podman imagee
+      podman build -t my-python-app .
+    displayName: "Build Python Podman image"
+
+  - script: |
+      # Save the Python project as a image
+      podman save my-python-app > my-app.tar
+    displayName: "Save Python project as tar"
+
+  - script: |
+      # Generate CBOM using - cbomkit 
+      podman run --rm -v $(pwd):/data nihharika/cbomkit_theia:latest image get /data/my-app.tar > enriched_CBOM.json
+    displayName: "Generate CBOM"
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: "enriched_CBOM.json"
+      artifactName: "CBOM"
+      publishLocation: "Container"
+    displayName: "Publish CBOM Artifact"
