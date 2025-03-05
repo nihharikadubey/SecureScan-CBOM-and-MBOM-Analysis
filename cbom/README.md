@@ -1,128 +1,160 @@
-# python-project
+# Azure DevOps Crypto Bill of Materials (CBOM) Generation Pipeline
 
-This project attempts to consolidate best-practices all around the area of creating a Python package, including the development process, and package distribution process.
+## Overview
 
-Visit this project's [Wiki Pages](https://github.com/unfor19/python-project/wiki) (docs) to learn how it all works.
+This repository contains an Azure DevOps (ADO) pipeline configuration for generating Crypto Bill of Materials (CBOM) for Python applications using cbomkit_theia. The pipeline automates the process of analyzing cryptographic assets and generating detailed inventories.
 
-## Quick Start
+## 🔒 CBOM Generation Pipeline
 
-To run the application, go ahead and use pip or Docker.
+### Purpose
+The CBOM pipeline generates a comprehensive inventory of cryptographic assets within Python applications, providing transparency into the cryptographic components and their configurations.
 
-### pip
+### Key Features
+- Multi-stage Docker build process for Python applications
+- Automated CBOM generation using cbomkit_theia
+- CycloneDX-format output
+- Seamless integration with Azure DevOps
+- Artifact publication for easy access
 
-Requires Python v3.6 and above
-###
-
-```
-$ pip install -U unfor19-appy
-
-$ appy
-Created the file: $HOME/python-project/meirg-ascii.txt
-Insert your name: meir gabay
-
-Hello Meir Gabay, here's the cat fact of the day:
-Unlike humans, cats do not need to blink their eyes on a regular basis to keep their eyes lubricated.
-
-$ cat $HOME/python-project/meirg-ascii.txt
-```
-
-###
-
-### Docker
-
-Requires [Docker](https://docs.docker.com/get-docker/)
-
-```bash
-$ docker run --rm -it unfor19/appy bash
-$ (container) appy
-Created the file: /app/meirg-ascii.txt
-... # Same as above
-$ (container) cat /app/meirg-ascii.txt
-```
-
-<details>
-
-<summary>Expand/Collapse - contents of meirg-ascii.txt</summary>
+## Project Structure
 
 ```
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-......................................................::!!!!!::::.......................................................
-.................................................:!*$%@S#&$$$@@$%*%**!:.................................................
-.............................................:!*@&&@$::::.........::!$@%!!:.............................................
-...........................................!@&@%%:.....................::!*!:...........................................
-.........................................*&#%:.............................::!!.........................................
-.......................................!@&*:.................................:!::.......................................
-.....................................:@$*.......................................:!:.....................................
-....................................*#$:..........::::::........::::::.............:....................................
-...................................$S*............!&&&&@:......:@&&&&*.............::...................................
-..................................@#:.............!&&%&&$......%&&%@&*................:.................................
-.................................$S!..............!&@%$&&!....!&&@%@&*................:.................................
-................................%S!...............!&@$$@&@:...$&@$$@&*................:.................................
-...............................!B&................!&@$&$&&*..*&&$&$@&*................::................................
-...............................!&!................!&@$&@$&@::@&@$&$@&*.................:................................
-...............................$&.................!&@$&&$@&%%&&$&&$@&*..................................................
-...............................@#.................!&@$&&&$&&&&$@&&$@&*..................................................
-...............................@@.................!&@$&&&$$&&@$&&&$@&*..................:...............................
-...............................@&.................!&@$&@@&$@&$&@$&$@&*.................%!...............................
-...............................%S:................!&@$&$!&@$$@&*%&$@&*................:S!...............................
-...............................:B%................!&@$&$.%#$$#$.%&$@&*................%B:...............................
-...............................:B#:...............!&@$&$.:$$$$!.%&$@&*................#@................................
-................................&B$...............!&@$&$........%&$@&*...............$S:................................
-................................:#S:..............!&@$&$........%&$@&*..............*B%.................................
-.................................:S#:.............!&&$&$........%&$@&*.............!S@..................................
-..................................!S&:............!&$%&$........%&%$&*............*S@...................................
-...................................:&B$...........:!..:!........::..::..........:@B$....................................
-.....................................%B@:......................................*#S*.....................................
-......................................!##@!..................................!&S@:......................................
-........................................*&S@*:.............................*@#$:........................................
-..........................................!$SS&*:......................:!@&@%:..........................................
-............................................:*@###$*!:...........:::!$&&@%:.............................................
-................................................!%@$$@&&#&@@&@@$&##&$%!:................................................
-......................................................:!!*%%%%*!!::.....................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-....................!!!!:.......!!!!:.....!!!!!!!!!!!!!.....:!!!!.....!!!!!!!!!!!:.........:!!!!!!!:....................
-..................!&&$$%@!....!&$$$$$...*#@$@@@@@@@@@$&*..:$S$$$&:..!&&$$@@@@@@$%$%......!$$$$$$$$$$$:..................
-.................:S#@*%%*@!..%B$*%%%@..!SB$%%*********@*..@BB*%*@!.:#B@*%%********$$...:$#%%%%%%%%%%%@:.................
-.................!&@@%%%%*@:*B$*%%%%@..*#&$%%%SSSSSSS#$:..@##*%*@!.!@#@*%*SSSSS#*%!&:..&B@%%%SBSSS%%*@*.................
-.................!&#@%%%%%*&B$*%%%%%@..*&@$%%%S&&&&&&%....@@&*%*@!.!&&@*%*#$$SBB*%!@!.!##$%%$&%@BBS##@:.................
-.................!&@@%%%%%%%$*%%%%%%@..*&@$%%%$$$$$$$@*...@@&*%*@!.!&@@*%%@%%@#@%%!&:.*&&$%%$%:@####&$!.................
-.................!&@@%%*&%*%%%!&$*%%@..*&&$%%*%%%%%%*@%...@@&*%*@!.!&@@*%%%%%%%%**$*..*&@$%%$#B#!%%%*$%.................
-.................!&@@%%*BB$$$%&B@*%%@..*&@$%%%SBBBBB#%:...@@#*%*@!.!&@@*%*@&&%*%!&!...*&&$%%%BBS@@%%*$*.................
-.................:#@@%%*BBBBS@#&@*%%@..*&&$%%%#####&$*%:..@@&*%*@!.!#@@*%*BBBB*%%%$...*#&$%%%SSSSS%%*$*.................
-.................!&#@*%*&!!!::&@@*%%@..!S#$%%*******%*@*..@&S*%*@!.!&&@*%*@$BBS*%*$%..!BBS****%%%***%@:.................
-.................:SB#@@@$....:S##$@@$..!BB&$@@@@@@@@@@&*..@BB$$$&:.:SB&$@@$.&BB&$@$&:..&BBB@$@$$@@@@%:..................
-.................:SBBBS%:....:SBBBS%:..!BBBBBBBBBBBBB&*...@BBBB@!..:SBBBS%:.:SBBBB@!...:$#BBBBBBB#$!....................
-..................:!!!:.......:!!!:.....:!!!!!!!!!!!!.....:!!!:.....:!!!:....:!!!:........:!!!!!:.......................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
-........................................................................................................................
+cbom/
+├── Dockerfile              # Multi-stage Docker build configuration
+├── main.py                # Application entry point
+├── src/
+│   └── appy/             # Main application package
+│       ├── core/         # Core application logic
+│       ├── utils/        # Utility functions
+│       └── assets/       # Application assets
+└── azure-pipelines.yml   # ADO pipeline configuration
 ```
 
-</details>
+## Application Components
 
-## References
+### Core Application
+The Python application includes:
+- Image to ASCII conversion functionality
+- HTTP requests for external API integration
+- File system operations
+- Modular architecture with separate utils and core components
 
-- [packaging python](https://packaging.python.org/tutorials/packaging-projects/)
-- [python-packaging-tutorial](https://python-packaging-tutorial.readthedocs.io/en/latest/setup_py.html)
-- [python sample project](https://github.com/pypa/sampleproject)
-- [setuptools package discovery](https://setuptools.readthedocs.io/en/latest/userguide/package_discovery.html)
+### Docker Configuration
+The Dockerfile implements a multi-stage build:
 
-## Authors
+1. **Build Stage**
+   ```dockerfile
+   FROM python:3.9.0-slim as build
+   # Build wheel package
+   # Validate wheel contents
+   ```
 
-Created and maintained by [Meir Gabay](https://github.com/unfor19)
+2. **App Stage**
+   ```dockerfile
+   FROM python:3.9.0-slim as app
+   # Security: Non-root user setup
+   # Application installation
+   # Runtime configuration
+   ```
+
+Key Features:
+- Python 3.9.0 base image
+- Non-root user execution
+- Multi-stage build for smaller final image
+- Wheel package validation
+- Configurable build arguments
+
+## Pipeline Structure
+
+The Azure DevOps pipeline consists of four main stages:
+
+1. **Docker Image Pull**
+   ```yaml
+   - script: |
+       docker pull nihharika/cbomkit_theia:latest
+   ```
+
+2. **Application Build**
+   ```yaml
+   - script: |
+       podman build -t my-python-app .
+   ```
+
+3. **CBOM Generation**
+   ```yaml
+   - script: |
+       podman save my-python-app > my-app.tar
+       podman run --rm -v $(pwd):/data nihharika/cbomkit_theia:latest image get /data/my-app.tar > enriched_CBOM.json
+   ```
+
+4. **Results Publication**
+   ```yaml
+   - task: PublishBuildArtifacts@1
+     inputs:
+       pathToPublish: "enriched_CBOM.json"
+       artifactName: "CBOM"
+   ```
+
+## Generated CBOM Insights
+
+The CBOM provides detailed information about:
+- Cryptographic certificates
+- Certificate details:
+  - Subject and Issuer names
+  - Validity periods
+  - Signature algorithms
+  - Public key information
+- Cryptographic dependencies
+- Security configurations
+
+## Prerequisites
+
+- Azure DevOps environment
+- Docker/Podman installation
+- Python project to analyze
+- Access to cbomkit_theia Docker image
+- Internet access for pulling dependencies
+
+## Getting Started
+
+1. Clone this repository
+2. Ensure your Python project follows the required structure
+3. Configure the pipeline in Azure DevOps:
+   ```yaml
+   trigger:
+     - main
+
+   pool:
+     vmImage: ubuntu-latest
+   ```
+4. Run the pipeline
+
+## Tools Used
+
+- **cbomkit_theia**: CBOM generation tool
+- **Docker/Podman**: Container runtime
+- **Azure DevOps**: CI/CD platform
+- **Python**: Application runtime
+- **CycloneDX**: CBOM format specification
+
+## Security Benefits
+
+- Complete cryptographic asset visibility
+- Enhanced security assessment capabilities
+- Compliance documentation support
+- Supply chain security improvement
+- Risk assessment facilitation
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
+
+## License
+
+[Insert your license information here]
+
+---
+
+For more information about cbomkit_theia, visit [cbomkit Documentation]

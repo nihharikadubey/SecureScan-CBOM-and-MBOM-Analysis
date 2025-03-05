@@ -1,20 +1,90 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Azure DevOps Bill of Materials (BOM) Generation Pipeline
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+## Overview
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+This repository contains an Azure DevOps (ADO) pipeline configuration for generating Mobile Bill of Materials (MBOM) for Android applications using Syft. The pipeline automates the process of analyzing APK files and generating detailed component inventories.
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+## 🔍 MBOM Generation Pipeline
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+### Purpose
+The pipeline analyzes Android (.apk) applications to generate a comprehensive Software Bill of Materials, providing transparency into the application's components and dependencies.
+
+### Key Features
+- Automated MBOM generation for APK files
+- JSON-formatted output with detailed package information
+- Seamless integration with Azure DevOps
+- Artifact publication for easy access and sharing
+
+### Workflow
+1. **Setup**: Installs Syft tool from the official Anchore repository
+2. **Analysis**: Generates MBOM for target APK file
+3. **Processing**: Formats JSON output for readability
+4. **Publication**: Publishes results as pipeline artifacts
+
+### Generated MBOM Insights
+The MBOM provides detailed information about:
+- Package dependencies
+- Component versions
+- Artifact metadata
+- Binary analysis results
+- Package relationships
+
+## Prerequisites
+
+- Azure DevOps environment
+- Android APK file to analyze
+- Access to internet (for Syft installation)
+
+## Getting Started
+
+1. Clone this repository
+2. Place your target APK file in the repository
+3. Configure the pipeline in Azure DevOps:
+   ```yaml
+   trigger:
+     - main
+
+   pool:
+     vmImage: 'ubuntu-latest'
+   ```
+4. Run the pipeline
+
+## Pipeline Structure
+
+The pipeline consists of three main stages:
+
+1. **Tool Installation**
+   - Downloads and installs Syft
+   - Verifies installation success
+
+2. **MBOM Generation**
+   - Creates output directory
+   - Analyzes APK file
+   - Generates formatted JSON output
+   - Verifies generated files
+
+3. **Results Publication**
+   - Publishes MBOM as pipeline artifact
+   - Makes results available for download
+
+## Tools Used
+
+- **Syft**: Industry-standard MBOM generation tool
+- **Azure DevOps**: CI/CD platform
+- **jq**: JSON processing utility
+
+## Security Benefits
+
+- Complete software component visibility
+- Enhanced supply chain security
+- Dependency tracking and management
+- Compliance documentation support
+- Risk assessment facilitation
+
+## Output Format
+
+The MBOM is generated in JSON format, providing:
+- Structured component data
+- Detailed package information
+- Version tracking
+- Dependency relationships
